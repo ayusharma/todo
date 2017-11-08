@@ -31,7 +31,12 @@ function renderAddTodoAtBottom(input, todoList) {
 }
 
 function renderInput() {
-    return `<div class="todo__input"><input type="text" id="todoInput"><button id="addTodo">Add</button></div>`;
+    return `<div class="todo__input">
+                <form>
+                    <input type="text" id="todoInput">
+                    <button id="addTodo" type="submit">Add</button>
+                </form>
+            </div>`;
 }
 
 function renderTodos(todoItems) {
