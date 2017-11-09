@@ -4,9 +4,10 @@
   "description": "A simple filterable list",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --watch",
-    "build": "webpack"
+    "test": "jest",
+    "start": "npm run clean && NODE_ENV=development webpack --watch",
+    "build": "npm run clean && NODE_ENV=production webpack",
+    "clean": "rimraf ./dist"
   },
   "author": "",
   "dependencies": {
@@ -19,5 +20,12 @@
     "css-loader": "^0.23.1",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.11"
+  },
+  "devDependencies": {
+    "extract-text-webpack-plugin": "^1.0.1",
+    "node-sass": "^4.6.0",
+    "rimraf": "^2.6.2",
+    "sass-loader": "^4.1.1",
+    "webpack-dev-server": "^1.9.0"
   }
 }
