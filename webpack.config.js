@@ -2,10 +2,12 @@
  * Created by pgotthardt on 14/01/16.
  */
 var path = require('path');
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var isProduction = process.env.NODE_ENV === 'production';
-
+console.log(isProduction);
 /**
  * Babel Loader
  */
@@ -54,6 +56,17 @@ module.exports = {
         loaders: loaders
     },
     plugins: [
-        new ExtractTextPlugin("style.css")
-    ]
+        new ExtractTextPlugin("style.css"),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin(),
+        new HtmlWebpackPlugin({
+            template: __dirname + '/index.html',
+            filename: 'index.html',
+            inject: 'body'
+        })
+    ],
+    devServer: {
+        contentBase: path.join(__dirname, './'),
+        compress: true
+    }
 };
