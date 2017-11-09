@@ -18,3 +18,12 @@ export function createStore(reducer, initial = {}) {
         }
     };
 }
+
+export function combineReducers(reducers) {
+  return (state = {}, change) => {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      nextState[key] = reducers[key](state[key], change);
+      return nextState;
+    }, {});
+  };
+};

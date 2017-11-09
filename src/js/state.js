@@ -1,4 +1,4 @@
-import {createStore} from './lib/state';
+import { createStore, combineReducers } from "./lib/state";
 
 const initialState = {
     todos: [
@@ -22,27 +22,56 @@ const initialState = {
             text: 'Filter todos by text',
             done: false
         }
-    ]
+    ],
+    filter: 'ALL'
 };
 
-function todoChangeHandler(state, change) {
+/**
+ * Todo reducer
+ * Reducers always be pure fuctions. They should not mutate the outer state.
+ * @param {array} state 
+ * @param {object} change action
+ */
+export function todoChangeHandler(state = [], change) {
     switch(change.type) {
         case 'ADD_TODO':
-            state.todos.push({
-                id: state.todos.length,
+            return [...state, {
+                id: state.length,
                 text: change.text,
                 done: false
-            });
-            break;
+            }];
+
         case 'TODO_TOGGLE_DONE':
-            for(let todo of state.todos) {
-                if(todo.id === change.id) {
-                    todo.done = !todo.done;
-                    break;
+            return state.map(e => {
+                if (e.id === change.id) {
+                    e.done = !e.done;
                 }
-            }
-            break;
+                return e;
+            })
+
+        default:
+            return state;
     }
 }
 
-export const todos = createStore(todoChangeHandler, initialState);
+/**
+ * Filter reducer
+ * @param {string} state 
+ * @param {object} change action
+ */
+export function filterChangeHandler(state = 'ALL', change) {
+    switch(change.type) {
+        case 'SET_FILTER':
+            return change.filter;
+        default:
+            return state;
+    }
+}
+
+/**
+ * Create Store
+ */
+export const todos = createStore(combineReducers({
+    todos: todoChangeHandler,
+    filter: filterChangeHandler
+}), initialState);

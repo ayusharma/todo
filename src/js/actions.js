@@ -14,3 +14,14 @@ export function addTodo(text) {
         text
     }
 }
+
+/**
+ * Set filter action
+ * @param {string} filter 
+ */
+export function setFilter(filter) {
+    return {
+      type: 'SET_FILTER',
+      filter
+    };
+}
