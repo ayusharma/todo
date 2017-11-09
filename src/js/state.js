@@ -74,4 +74,4 @@ export function filterChangeHandler(state = 'ALL', change) {
 export const todos = createStore(combineReducers({
     todos: todoChangeHandler,
     filter: filterChangeHandler
-}), initialState);
+}), localStorage["todo"] ? JSON.parse(localStorage["todo"]) : initialState);
