@@ -1,0 +1,111 @@
+$width: 400px;
+$border-width: 1px;
+
+/* Color Palatter */
+$green: green;
+$black: black;
+$orange: orange;
+$white: white;
+$border-color: #ccc;
+
+/* Font Configuration */
+$font-family: sans-serif;
+
+/** To DO config **/
+$todoFontSize: 18px;
+$todoItemSpacing: 30px;
+
+
+html,
+body,
+.todo {
+    margin: 0;
+    padding: 0;
+    font-family: $font-family;
+}
+
+.todo {
+    list-style-type: none;
+    width: $width;
+    margin: auto;
+    text-align: left;
+}
+
+
+#todoInput {
+    width: $width - 44;
+    padding: 0px 16px 8px 32px;
+    font-size: $todoFontSize;
+    border: 0;
+    border-bottom: $border-width solid $border-color;
+    margin:16px 0px 10px 0px;
+    &:focus {
+        outline: 0;
+    }
+}
+
+
+.todo__text-center {
+    text-align: center;
+}
+
+.todo__item--done {
+    text-decoration: line-through;
+    color: lighten($black, 40%);
+}
+
+.todo__list-element {
+     margin: 15px 0px 15px 0px;
+     .todo__text {
+         font-size: $todoFontSize;
+         line-height: $todoItemSpacing;
+     }
+}
+
+
+
+input[type="checkbox"] {
+    width: 2em;
+    height: 2em;
+    background-color: $white;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    -webkit-appearance: none;
+    outline: none;
+    margin-top: -1px;
+    cursor: pointer;
+    &:checked {
+        background-color: $green;
+        &:hover {
+            background-color: lighten($green, 5%);
+        }
+    }
+}
+
+
+.todo__filter__bar {
+    margin-top: 40px;
+    span {
+        padding: 0px 15px 0px 1px;
+    }
+}
+
+input[type="radio"]{
+     width: 1.5em;
+     height: 1.5em;
+     background-color: $white;
+     border-radius: 50%;
+     vertical-align: middle;
+     border: 1px solid #ddd;
+     -webkit-appearance: none;
+     outline: none;
+     margin-top: -1px;
+     cursor: pointer;
+     &:checked {
+         background-color: $orange;
+         &:hover {
+             background-color: lighten($orange, 5%);
+         }
+     }
+}

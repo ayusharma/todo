@@ -4,11 +4,12 @@ export function render(el, state) {
     console.log(state);
     const { filter } = state;
     const todoItems = filterTodoItem(filter,state.todos).map(renderTodoItem).join('');
-    el.innerHTML = renderApp(
-        renderInput(),
-        renderTodos(todoItems),
-        renderStatusFilters(filter)
-    );
+    el.innerHTML = `
+            <div id="app" class="todo__text-center">
+            ${renderHeading()}
+            ${renderApp(renderInput(), renderTodos(todoItems), renderStatusFilters(filter))}
+            </div>
+            `;
 }
 
 /**
@@ -29,42 +30,94 @@ function filterTodoItem (filter, todos) {
 }
 
 function renderApp(input, todoList, filterBar) {
-    if(isEnabled('renderBottom')) {
-        return renderAddTodoAtBottom(input, todoList);
-    } else if (isEnabled('filter')) {
-        return renderStatusFilterBar(input, todoList, filterBar);
-    } else {
-        return renderAddTodoAtTop(input, todoList);
+    const status = {
+        renderBottom: isEnabled('renderBottom'),
+        filter: isEnabled('filter'),
+        filterTop: isEnabled('filterTop')
     }
+
+    if (status.renderBottom && status.filter && status.filterTop) {
+        return renderFilterTop(input, todoList, filterBar);
+    }
+
+    if (status.renderBottom && status.filter) {
+        return renderAddTodoAtBottomWithFilter(input, todoList, filterBar);
+    }
+    if (status.renderBottom) {
+        return renderAddTodoAtBottom(input, todoList);
+    } 
+
+    if (status.filter) {
+        return renderStatusFilterBar(input, todoList, filterBar);
+    }
+      
+    return renderAddTodoAtTop(input, todoList);
 }
 
 function renderAddTodoAtTop(input, todoList) {
-    return `<div id="app">
+    return `
         ${input}
         ${todoList}
-    </div>`;
+    `;
 }
 
 function renderAddTodoAtBottom(input, todoList) {
-    return `<div id="app">
+    return `
         ${todoList}
         ${input}
-    </div>`;
+        `;
 }
 
+/**
+ * Render addToDo at bottom with filter - #filter#renderBottom
+ * @param {string} input 
+ * @param {string} todoList 
+ * @param {string} filterBar 
+ * @returns {string} App template
+ */
+function renderAddTodoAtBottomWithFilter(input, todoList, filter) {
+  return `
+        ${todoList}
+        ${input}
+        ${filter}
+        `;
+}
+
+/**
+ * Render filter bar the bottom - #filter
+ * @param {string} input 
+ * @param {string} todoList 
+ * @param {string} filterBar 
+ * @returns {string} App template
+ */
 function renderStatusFilterBar(input, todoList, filterBar) {
-  return `<div id="app">
+  return `
         ${input}
         ${todoList}
         ${filterBar}
-    </div>`;
+        `;
+}
+
+/**
+ * Render filter bar at the top - #filter#renderBottom#filterTop
+ * @param {string} input 
+ * @param {string} todoList 
+ * @param {string} filterBar 
+ * @returns {string} App template
+ */
+function renderFilterTop(input, todoList, filterBar) {
+    return `
+        ${filterBar}
+        ${todoList}
+        ${input}
+        `;
 }
 
 function renderInput() {
     return `<div class="todo__input">
                 <form>
-                    <input type="text" id="todoInput">
-                    <button id="addTodo" type="submit">Add</button>
+                    <input type="text" id="todoInput" placeholder="Add a task" required />
+                    <button id="addTodo" type="submit" hidden="true">Add</button>
                 </form>
             </div>`;
 }
@@ -75,21 +128,28 @@ function renderTodos(todoItems) {
 
 function renderTodoItem(todo) {
     const todoClass = `todo__item todo__item--${todo.done ? 'done' : 'open'}`;
-    return `<li class="${todoClass}">
-        <input class="js_toggle_todo" type="checkbox" data-id="${todo.id}" ${todo.done ? ' checked' : ''}>
-        ${todo.text}
-    </li>`;
+    return `<li class="todo__list-element">
+                <input class="js_toggle_todo" type="checkbox" data-id="${todo.id}" ${todo.done ? " checked" : ""}>
+                <label class="${todoClass} todo__text ">${todo.text}</label>
+            </li>`;
 }
 
 /**
- * Add status filtering
+ * Add status filtering bar
  * @param {string} filter OPEN/CLOSED/ALL
  * @returns {string} template to render according to filter
  */
 function renderStatusFilters(filter) {
     return `<div class="todo__filter__bar">
-                <input type="radio" class="js_toggle_filter" value="ALL" name="status"  ${filter === "ALL" ? " checked" : ""}/> Show All
-                <input type="radio" class="js_toggle_filter" value="OPEN" name="status"  ${filter === "OPEN" ? " checked" : ""}/> Show Open
-                <input type="radio" class="js_toggle_filter" value="CLOSED" name="status"  ${filter === "CLOSED" ? " checked" : ""}/> Show Closed
+                <input type="radio" class="js_toggle_filter" 
+                    value="ALL" name="status"  ${filter === "ALL" ? " checked" : ""}/> <span>All</span>
+                <input type="radio" class="js_toggle_filter" 
+                    value="OPEN" name="status"  ${filter === "OPEN" ? " checked" : ""}/> <span>Open</span>
+                <input type="radio" class="js_toggle_filter" 
+                    value="CLOSED" name="status"  ${filter === "CLOSED" ? " checked" : ""}/> <span>Closed</span>
             </div>`;
+}
+
+function renderHeading() {
+    return `<div><h1>Just do</h1></div>`;
 }
