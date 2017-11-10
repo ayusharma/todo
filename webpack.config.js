@@ -24,7 +24,9 @@ var loaders = [
         test: /\.js$/,
         include: [path.resolve(__dirname, 'src', 'js')],
         query: {
-            plugins: ['transform-runtime'],
+            plugins: [
+                'transform-runtime'
+            ],
             presets: ['es2015']
         }
     },
@@ -45,6 +47,14 @@ var loaders = [
 var plugins = [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function (module) {
+        // this assumes your vendor imports exist in the node_modules directory
+        return module.context && module.context.indexOf('node_modules') !== -1;
+      }
+    }),
     /**
      * Webpack HTML Webpack Plugin
      * Reference: https://github.com/jantimon/html-webpack-plugin
@@ -52,7 +62,7 @@ var plugins = [
     new HtmlWebpackPlugin({
         template: __dirname + '/index.html',
         filename: 'index.html',
-        inject: 'body'
+        inject: true
     }),
     /**
      * Webpack Define Plugin
@@ -122,10 +132,12 @@ if (isProduction) {
 }
 
 module.exports = {
-    entry: ['babel-polyfill', path.normalize(__dirname + '/src/js/main')],
+    entry: {
+        main: ['babel-polyfill', path.normalize(__dirname + '/src/js/main')]
+    },
     devtool: 'cheap-module-source-map',
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         path: path.join(__dirname, 'dist')
     },
     module: {
@@ -135,7 +147,11 @@ module.exports = {
     devServer: {
         contentBase: path.join(__dirname, './'),
         compress: true
-    }
+    },
+    /**
+     * Make source map only in dev mode.
+     */
+    devtool: !isProduction ? 'source-map' : false
     /*
      * Removed  due to https://github.com/webpack/webpack/issues/1513
      * resolveLoader: {
