@@ -36,5 +36,8 @@
   ],
   "modulePathIgnorePatterns": [
     "global.js"
-  ]
+  ],
+  "dependencies": {
+    "redux": "^3.7.2"
+  }
 }

@@ -5,9 +5,8 @@ import {todos} from './state';
 import {render} from './view';
 import {registerEventHandlers} from './events';
 
-todos.subscribe(newState => {
-    localStorage['todo'] = JSON.stringify(newState);
-    return render(document.body, newState)
+todos.subscribe(() => {
+    return render(document.body, todos.getState());
 });
 
 render(document.body, todos.getState());

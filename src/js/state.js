@@ -1,4 +1,4 @@
-import { createStore, combineReducers } from "./lib/state";
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 
 const initialState = {
     todos: [
@@ -69,9 +69,26 @@ export function filterChangeHandler(state = 'ALL', change) {
 }
 
 /**
- * Create Store
+ * Save to localstorage
+ * @param {object} store 
  */
-export const todos = createStore(combineReducers({
+const saver = store => next => action => {
+    let result = next(action);
+    localStorage['todo'] = JSON.stringify(store.getState());
+    return result;
+}
+
+/**
+ * Reducers
+ */
+const reducers = combineReducers({
     todos: todoChangeHandler,
     filter: filterChangeHandler
-}), localStorage["todo"] ? JSON.parse(localStorage["todo"]) : initialState);
+});
+
+/**
+ * Create Store
+ */
+export const todos = createStore(reducers, 
+    localStorage['todo'] ? JSON.parse(localStorage['todo']) : initialState, applyMiddleware(saver));
+    
