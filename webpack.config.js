@@ -7,29 +7,57 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
     .BundleAnalyzerPlugin;
-
+/**
+ * Setting environmen, Please see scripts in package.json
+ */
 var isProduction = process.env.NODE_ENV === 'production';
 /**
- * Babel Loader
+ * Loaders
  */
-var loaders = [{
-    loader: 'babel',
-    test: /\.js$/,
-    include: [path.resolve(__dirname, 'src', 'js')],
-    query: {
-        plugins: ['transform-runtime'],
-        presets: ['es2015']
+var loaders = [
+    /**
+     * Babel Loader
+     * Reference: https://github.com/babel/babel-loader
+     */
+    {
+        loader: 'babel',
+        test: /\.js$/,
+        include: [path.resolve(__dirname, 'src', 'js')],
+        query: {
+            plugins: ['transform-runtime'],
+            presets: ['es2015']
+        }
+    },
+    /**
+     * Find and replace loader for isEnabled('filter')
+     * Reference: visit loader directory in project
+     */
+    {
+        test: /\.js$/,
+        loader: path.resolve('loader/findreplace'),
+        query: [{
+            find: "isEnabled\\('filter'\\)",
+            replace: 'true'
+        }]
     }
-}];
-
+];
 
 var plugins = [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(), new HtmlWebpackPlugin({
+    new webpack.NamedModulesPlugin(),
+    /**
+     * Webpack HTML Webpack Plugin
+     * Reference: https://github.com/jantimon/html-webpack-plugin
+     */
+    new HtmlWebpackPlugin({
         template: __dirname + '/index.html',
         filename: 'index.html',
         inject: 'body'
     }),
+    /**
+     * Webpack Define Plugin
+     * Reference: https://webpack.js.org/plugins/define-plugin/
+     */
     new webpack.DefinePlugin({
         'process.env': {
             NODE_ENV: JSON.stringify(
@@ -37,6 +65,10 @@ var plugins = [
             )
         }
     }),
+    /**
+     * Webpack bundle analyser plugin
+     * Reference: https://github.com/webpack-contrib/webpack-bundle-analyzer
+     */
     new BundleAnalyzerPlugin({
         analyzerMode: 'server',
         // Host that will be used in `server` mode to start HTTP server.
@@ -93,7 +125,7 @@ module.exports = {
     entry: ['babel-polyfill', path.normalize(__dirname + '/src/js/main')],
     devtool: 'cheap-module-source-map',
     output: {
-        filename: '[name].js',
+        filename: 'bundle.js',
         path: path.join(__dirname, 'dist')
     },
     module: {
@@ -104,4 +136,12 @@ module.exports = {
         contentBase: path.join(__dirname, './'),
         compress: true
     }
+    /*
+     * Removed  due to https://github.com/webpack/webpack/issues/1513
+     * resolveLoader: {
+     *   alias: {
+     *       'isenabled': path.join(__dirname, 'loader', 'isenabled.js')
+     *   }
+     *  }
+     */
 };
