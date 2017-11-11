@@ -2,7 +2,7 @@
 
 * * *
 
-![](static/preview.png)
+![](static/screenshot.png)
 A simple todo app made using 
 [Incremental DOM](http://google.github.io/incremental-dom/#about ) and 
 [Redux](redux.js.org).
