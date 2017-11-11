@@ -80,13 +80,11 @@ const renderTodoItems = todo => {
  * @param {array} state 
  */
 const renderTodoList = state => {
-  elementOpen('div')
   elementOpen('ul', null, ['class', 'todo']);
   state.forEach(element => {
     renderTodoItems(element);
   });
   elementClose('ul');
-  elementClose('div')
 };
 
 /**
@@ -124,9 +122,11 @@ const renderFilterBar = filter => {
  */
 function renderPart(data) {
   const {todoItems, filter} = data;
-  elementOpen('div', null, ['class', 'todo__text-center', 'id', 'app']);
+  elementOpen('div', null, ['id', 'app']);
   header();
+  elementOpen('div', null, ['class','card'])
   renderApp(data);
+  elementClose('div')
   elementClose('div');
 }
 
