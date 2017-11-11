@@ -11,7 +11,10 @@ import {
  * Render Header
  */
 const header = () => {
-    elementOpen('h1');
+    elementOpen('h1',null,['class','heading']);
+    elementOpen('i',null,['class','material-icons']);
+    text('done_all');
+    elementClose('i');
     text('Just do');
     elementClose('h1');
 }
@@ -27,6 +30,8 @@ const renderInputBox = () => {
     'text',
     'id',
     'todoInput',
+    'class',
+    '',
     'placeholder',
     'Add a task'
   ]);
@@ -54,16 +59,19 @@ const renderTodoItems = todo => {
   const todoClass = `todo__item todo__item--${todo.done ? 'done' : 'open'}`;
   const checked = todo.done ? true : false;
   elementOpen('li', todo.id, ['class', 'todo__list-element']);
-  elementVoid(
-    'input',
-    undefined,
-    ['type', 'checkbox', 'class', 'js_toggle_todo'],
-    'data-id',
-    todo.id
-  ).checked = checked;
+  elementOpen('div');
+  elementVoid('input', undefined, ['type', 'checkbox', 'class', 'js_toggle_todo'], 'data-id', todo.id).checked = checked;
+  elementClose('div');
+  elementOpen('div');
   elementOpen('label', null, null, 'class', `${todoClass} todo__text`);
   text(todo.text);
   elementClose('label');
+  elementClose('div');
+  elementOpen('div');
+  elementOpen('i', null, ['class', 'material-icons todo__remove'], 'data-id', todo.id);
+  text('close');
+  elementClose('i');
+  elementClose('div');
   elementClose('li');
 };
 
@@ -72,11 +80,13 @@ const renderTodoItems = todo => {
  * @param {array} state 
  */
 const renderTodoList = state => {
+  elementOpen('div')
   elementOpen('ul', null, ['class', 'todo']);
   state.forEach(element => {
     renderTodoItems(element);
   });
   elementClose('ul');
+  elementClose('div')
 };
 
 /**

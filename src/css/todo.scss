@@ -1,4 +1,4 @@
-$width: 400px;
+$width: 50vw;
 $border-width: 1px;
 
 /* Color Palatter */
@@ -6,10 +6,11 @@ $green: green;
 $black: black;
 $orange: orange;
 $white: white;
+$red: red;
 $border-color: #ccc;
 
 /* Font Configuration */
-$font-family: sans-serif;
+$font-family: fantasy;
 
 /** To DO config **/
 $todoFontSize: 20px;
@@ -33,7 +34,7 @@ body,
 
 
 #todoInput {
-    width: $width - 44;
+    width: $width;
     padding: 0px 16px 8px 32px;
     font-size: $todoFontSize;
     border: 0;
@@ -55,7 +56,31 @@ body,
 }
 
 .todo__list-element {
-     margin: 15px 0px 15px 0px;
+    margin: 15px 0px 15px 0px;
+    display: flex;
+    align-items: center;
+
+    > div {
+        margin-right: 8px;
+
+        &:last-child {
+            margin-right: 0;
+            flex-grow: 1;
+            text-align: right;
+            i {
+                visibility: hidden;
+                &:hover {
+                    color: $red;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    &:hover > div {
+        i {
+            visibility: visible;
+        }
+    }
      .todo__text {
          font-size: $todoFontSize;
          line-height: $todoItemSpacing;
@@ -73,7 +98,6 @@ input[type="checkbox"] {
     border: 1px solid #ddd;
     -webkit-appearance: none;
     outline: none;
-    margin: -1px 10px 0px 0px;
     cursor: pointer;
     &:checked {
         background-color: $green;
@@ -86,8 +110,11 @@ input[type="checkbox"] {
 
 .todo__filter__bar {
     margin-top: 40px;
-    span {
-        padding: 0px 15px 0px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > span {
+        margin: 0px 15px 0px 5px;
     }
 }
 
@@ -100,7 +127,6 @@ input[type="radio"]{
      border: 1px solid #ddd;
      -webkit-appearance: none;
      outline: none;
-     margin-top: -1px;
      cursor: pointer;
      &:checked {
          background-color: $orange;
@@ -108,4 +134,8 @@ input[type="radio"]{
              background-color: lighten($orange, 5%);
          }
      }
+}
+
+input, ::placeholder {
+   font-family: $font-family;
 }
