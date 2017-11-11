@@ -1,19 +1,141 @@
 import {isEnabled} from './lib/feature';
+import {
+  elementOpen,
+  elementClose,
+  text,
+  patch,
+  elementVoid
+} from 'incremental-dom';
 
-export function render(el, state) {
-    console.log(state);
-    const { filter } = state;
-    const todoItems = filterTodoItem(filter,state.todos).map(renderTodoItem).join('');
-    el.innerHTML = `
-            <div id="app" class="todo__text-center">
-            ${renderHeading()}
-            ${renderApp(renderInput(), renderTodos(todoItems), renderStatusFilters(filter))}
-            </div>
-            `;
+/**
+ * Render Header
+ */
+const header = () => {
+    elementOpen('h1');
+    text('Just do');
+    elementClose('h1');
 }
 
 /**
- * filters todos according to filter
+ * Render Input box to insert tasks
+ */
+const renderInputBox = () => {
+  elementOpen('div', null, ['class', 'todo__input']);
+  elementOpen('form', null, ['onsubmit', 'return false']);
+  elementOpen('input', null, [
+    'type',
+    'text',
+    'id',
+    'todoInput',
+    'placeholder',
+    'Add a task'
+  ]);
+  elementClose('input');
+  elementOpen('button', null, [
+    'id',
+    'addTodo',
+    'type',
+    'submit',
+    'hidden',
+    'true'
+  ]);
+  text('Add');
+  elementClose('button');
+  elementClose('form');
+  elementClose('div');
+};
+
+/**
+ * Render items in to do list
+ * @param {object} todo 
+ */
+const renderTodoItems = todo => {
+  console.log(todo);
+  const todoClass = `todo__item todo__item--${todo.done ? 'done' : 'open'}`;
+  const checked = todo.done ? true : false;
+  elementOpen('li', todo.id, ['class', 'todo__list-element']);
+  elementVoid(
+    'input',
+    undefined,
+    ['type', 'checkbox', 'class', 'js_toggle_todo'],
+    'data-id',
+    todo.id
+  ).checked = checked;
+  elementOpen('label', null, null, 'class', `${todoClass} todo__text`);
+  text(todo.text);
+  elementClose('label');
+  elementClose('li');
+};
+
+/**
+ * To Do list wrapper
+ * @param {array} state 
+ */
+const renderTodoList = state => {
+  elementOpen('ul', null, ['class', 'todo']);
+  state.forEach(element => {
+    renderTodoItems(element);
+  });
+  elementClose('ul');
+};
+
+/**
+ * Add status filtering bar
+ * @param {string} filter OPEN/CLOSED/ALL
+ * @returns {string} template to render according to filter
+ */
+const renderFilterBar = filter => {
+  console.log(filter);
+  const config = [
+    { value: 'ALL', display: 'All' },
+    { value: 'OPEN', display: 'Open' },
+    { value: 'CLOSED', display: 'Closed' }
+  ];
+  elementOpen('div', null, ['class', 'todo__filter__bar']);
+  config.forEach(e => {
+    elementVoid(
+      'input',
+      undefined,
+      ['type', 'radio', 'name', 'filters', 'class', 'js_toggle_filter'],
+      'value',
+      e.value
+    ).checked =
+      filter === e.value ? true : false;
+    elementOpen('span');
+    text(e.display);
+    elementClose('span');
+  });
+  elementClose('div');
+};
+
+/**
+ * Initiate app rendering
+ * @param {object} data 
+ */
+function renderPart(data) {
+  const {todoItems, filter} = data;
+  elementOpen('div', null, ['class', 'todo__text-center', 'id', 'app']);
+  header();
+  renderApp(data);
+  elementClose('div');
+}
+
+
+/**
+ * Render App to DOM
+ * @param {string} elm 
+ * @param {object} state 
+ */
+export function render(elm, state) {
+    console.log(state);
+    const { filter } = state;
+    const todoItems = filterTodoItem(filter, state.todos);
+    console.log(todoItems);
+    patch(elm, renderPart, {filter,todoItems});
+}
+
+/**
+ * Filters todos according to filter
  * @param {string} filter OPEN/CLOSED/ALL
  * @param {array} todos List of todos
  * @returns {array} filtered list of todos
@@ -29,43 +151,51 @@ function filterTodoItem (filter, todos) {
     }
 }
 
-function renderApp(input, todoList, filterBar) {
-    const status = {
-        renderBottom: isEnabled('renderBottom'),
-        filter: isEnabled('filter'),
-        filterTop: isEnabled('filterTop')
-    }
+/**
+ * Render app according to URL Parameters
+ * @param {object} data 
+ */
+function renderApp(data) {
+  const status = {
+    renderBottom: isEnabled('renderBottom'),
+    filter: isEnabled('filter'),
+    filterTop: isEnabled('filterTop')
+  };
 
-    if (status.renderBottom && status.filter && status.filterTop) {
-        return renderFilterTop(input, todoList, filterBar);
-    }
+  if (status.renderBottom && status.filter && status.filterTop) {
+    return renderFilterTop(data);
+  }
 
-    if (status.renderBottom && status.filter) {
-        return renderAddTodoAtBottomWithFilter(input, todoList, filterBar);
-    }
-    if (status.renderBottom) {
-        return renderAddTodoAtBottom(input, todoList);
-    } 
+  if (status.renderBottom && status.filter) {
+    return renderAddTodoAtBottomWithFilter(data);
+  }
+  if (status.renderBottom) {
+    return renderAddTodoAtBottom(data);
+  }
 
-    if (status.filter) {
-        return renderStatusFilterBar(input, todoList, filterBar);
-    }
-      
-    return renderAddTodoAtTop(input, todoList);
+  if (status.filter) {
+    return renderStatusFilterBar(data);
+  }
+
+  return renderAddTodoAtTop(data);
 }
 
-function renderAddTodoAtTop(input, todoList) {
-    return `
-        ${input}
-        ${todoList}
-    `;
+/**
+ * Render Todo at top. Default URL parameter.
+ * @param {object} data 
+ */
+function renderAddTodoAtTop(data) {
+    renderInputBox();
+    renderTodoList(data.todoItems);
 }
 
-function renderAddTodoAtBottom(input, todoList) {
-    return `
-        ${todoList}
-        ${input}
-        `;
+/**
+ * Render tood at bottom - #renderBottom
+ * @param {object} data 
+ */
+function renderAddTodoAtBottom(data) {
+    renderTodoList(data.todoItems);
+    renderInputBox();
 }
 
 /**
@@ -75,12 +205,10 @@ function renderAddTodoAtBottom(input, todoList) {
  * @param {string} filterBar 
  * @returns {string} App template
  */
-function renderAddTodoAtBottomWithFilter(input, todoList, filter) {
-  return `
-        ${todoList}
-        ${input}
-        ${filter}
-        `;
+function renderAddTodoAtBottomWithFilter(data) {
+    renderTodoList(data.todoItems);
+    renderInputBox();
+    renderFilterBar(data.filter);
 }
 
 /**
@@ -90,12 +218,10 @@ function renderAddTodoAtBottomWithFilter(input, todoList, filter) {
  * @param {string} filterBar 
  * @returns {string} App template
  */
-function renderStatusFilterBar(input, todoList, filterBar) {
-  return `
-        ${input}
-        ${todoList}
-        ${filterBar}
-        `;
+function renderStatusFilterBar(data) {
+    renderInputBox();
+    renderTodoList(data.todoItems);
+    renderFilterBar(data.filter);
 }
 
 /**
@@ -105,51 +231,8 @@ function renderStatusFilterBar(input, todoList, filterBar) {
  * @param {string} filterBar 
  * @returns {string} App template
  */
-function renderFilterTop(input, todoList, filterBar) {
-    return `
-        ${filterBar}
-        ${todoList}
-        ${input}
-        `;
-}
-
-function renderInput() {
-    return `<div class="todo__input">
-                <form>
-                    <input type="text" id="todoInput" placeholder="Add a task" required />
-                    <button id="addTodo" type="submit" hidden="true">Add</button>
-                </form>
-            </div>`;
-}
-
-function renderTodos(todoItems) {
-    return `<ul class="todo">${todoItems}</ul>`;
-}
-
-function renderTodoItem(todo) {
-    const todoClass = `todo__item todo__item--${todo.done ? 'done' : 'open'}`;
-    return `<li class="todo__list-element">
-                <input class="js_toggle_todo" type="checkbox" data-id="${todo.id}" ${todo.done ? " checked" : ""}>
-                <label class="${todoClass} todo__text ">${todo.text}</label>
-            </li>`;
-}
-
-/**
- * Add status filtering bar
- * @param {string} filter OPEN/CLOSED/ALL
- * @returns {string} template to render according to filter
- */
-function renderStatusFilters(filter) {
-    return `<div class="todo__filter__bar">
-                <input type="radio" class="js_toggle_filter" 
-                    value="ALL" name="status"  ${filter === "ALL" ? " checked" : ""}/> <span>All</span>
-                <input type="radio" class="js_toggle_filter" 
-                    value="OPEN" name="status"  ${filter === "OPEN" ? " checked" : ""}/> <span>Open</span>
-                <input type="radio" class="js_toggle_filter" 
-                    value="CLOSED" name="status"  ${filter === "CLOSED" ? " checked" : ""}/> <span>Closed</span>
-            </div>`;
-}
-
-function renderHeading() {
-    return `<div><h1>Just do</h1></div>`;
+function renderFilterTop(data) {
+    renderFilterBar(data.filter);
+    renderTodoList(data.todoItems);
+    renderInputBox();
 }

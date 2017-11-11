@@ -12,7 +12,7 @@ $border-color: #ccc;
 $font-family: sans-serif;
 
 /** To DO config **/
-$todoFontSize: 18px;
+$todoFontSize: 20px;
 $todoItemSpacing: 30px;
 
 
@@ -73,7 +73,7 @@ input[type="checkbox"] {
     border: 1px solid #ddd;
     -webkit-appearance: none;
     outline: none;
-    margin-top: -1px;
+    margin: -1px 10px 0px 0px;
     cursor: pointer;
     &:checked {
         background-color: $green;
@@ -87,7 +87,7 @@ input[type="checkbox"] {
 .todo__filter__bar {
     margin-top: 40px;
     span {
-        padding: 0px 15px 0px 1px;
+        padding: 0px 15px 0px 5px;
     }
 }
 

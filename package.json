@@ -38,6 +38,7 @@
     "global.js"
   ],
   "dependencies": {
+    "incremental-dom": "^0.5.1",
     "redux": "^3.7.2"
   }
 }
