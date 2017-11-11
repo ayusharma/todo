@@ -31,12 +31,14 @@
     "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-server": "^1.9.0"
   },
-  "setupFiles": [
-    "./__tests__/global.js"
-  ],
-  "modulePathIgnorePatterns": [
-    "global.js"
-  ],
+  "jest": {
+    "setupFiles": [
+      "./__tests__/global.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "global.js"
+    ]
+  },
   "dependencies": {
     "incremental-dom": "^0.5.1",
     "redux": "^3.7.2"
