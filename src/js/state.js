@@ -4,22 +4,27 @@ const initialState = {
     todos: [
         {
             id: 0,
-            text: 'Take a look at the application',
+            text: '🎉 Let\'s party tonight',
             done: true
         },
         {
             id: 1,
-            text: 'Add ability to filter todos',
+            text: '✈️ Filght to Germany',
             done: false
         },
         {
             id: 2,
-            text: 'Filter todos by status',
+            text: '🏩 Book hotel on Trivago',
             done: false
         },
         {
             id: 3,
-            text: 'Filter todos by text',
+            text: '💻 Start develop To Do App',
+            done: false
+        },
+        {
+            id: 4,
+            text: '🤳 Take selfies with monuments',
             done: false
         }
     ],
