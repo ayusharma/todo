@@ -76,14 +76,40 @@ const renderTodoItems = todo => {
 };
 
 /**
+ * Tasks config
+ */
+const NoAllTasks = () => text('💯 Let\'s make some plans');
+const NoOpenTasks = () => text('👏 Nothing Here');
+const NoCloseTasks = () => text('👨‍💻 Nothing Here');
+/**
+ * Nothing Here Template 
+ */
+const renderNothingHere = (filter) => {
+  elementOpen('li', null, ['class', 'todo__text-center']);
+  if (filter === 'ALL') {
+    NoAllTasks();
+  }
+  if (filter === 'OPEN'){
+    NoOpenTasks();
+  }
+  if (filter === 'CLOSED') {
+    NoCloseTasks();
+  }
+  elementClose('li');
+}
+
+/**
  * To Do list wrapper
  * @param {array} state 
  */
 const renderTodoList = state => {
   elementOpen('ul', null, ['class', 'todo']);
-  state.forEach(element => {
+  state.todoItems.forEach(element => {
     renderTodoItems(element);
   });
+  if (state.todoItems.length === 0){
+    renderNothingHere(state.filter);
+  }
   elementClose('ul');
 };
 
@@ -196,7 +222,7 @@ function renderApp(data) {
  */
 function renderAddTodoAtTop(data) {
     renderInputBox();
-    renderTodoList(data.todoItems);
+    renderTodoList(data);
 }
 
 /**
@@ -204,7 +230,7 @@ function renderAddTodoAtTop(data) {
  * @param {object} data - store
  */
 function renderAddTodoAtBottom(data) {
-    renderTodoList(data.todoItems);
+    renderTodoList(data);
     renderInputBox();
 }
 
@@ -213,7 +239,7 @@ function renderAddTodoAtBottom(data) {
  * @param {object} data - store
  */
 function renderAddTodoAtBottomWithFilter(data) {
-    renderTodoList(data.todoItems);
+    renderTodoList(data);
     renderInputBox();
     renderFilterBar(data.filter);
 }
@@ -224,7 +250,7 @@ function renderAddTodoAtBottomWithFilter(data) {
  */
 function renderStatusFilterBar(data) {
     renderInputBox();
-    renderTodoList(data.todoItems);
+    renderTodoList(data);
     renderFilterBar(data.filter);
 }
 
@@ -234,6 +260,6 @@ function renderStatusFilterBar(data) {
  */
 function renderFilterTop(data) {
     renderFilterBar(data.filter);
-    renderTodoList(data.todoItems);
+    renderTodoList(data);
     renderInputBox();
 }
