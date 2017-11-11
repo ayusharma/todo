@@ -25,7 +25,7 @@ export function registerEventHandlers() {
      * Toggle Todo listener
      */
     listen('click', '.js_toggle_todo', event => {
-        const id = Number.parseInt(event.target.getAttribute('data-id'), 10);
+        const id = event.target.getAttribute('data-id');
         todos.dispatch(toggleTodoState(id));
     });
     
@@ -40,7 +40,7 @@ export function registerEventHandlers() {
      * Todo remove listener
      */
     listen('click', '.todo__remove', event => {
-      const id = Number.parseInt(event.target.getAttribute('data-id'), 10);
+      const id = event.target.getAttribute('data-id');
       todos.dispatch(removeTodo(id));
     });
 }

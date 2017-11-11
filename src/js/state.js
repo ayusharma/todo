@@ -1,29 +1,30 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import uuid from './lib/uuid';
 
 const initialState = {
     todos: [
         {
-            id: 0,
+            id: 'f1cb6925-c158-6134-3e05-ebbdeecf2c8e',
             text: '🎉 Let\'s party tonight',
             done: true
         },
         {
-            id: 1,
+            id: '6b4524d6-26e5-34ab-8a85-b9649b82d017',
             text: '✈️ Filght to Germany',
             done: false
         },
         {
-            id: 2,
+            id: '19d3ec08-ac7b-36aa-d97f-887a984180ec',
             text: '🏩 Book hotel on Trivago',
             done: false
         },
         {
-            id: 3,
+            id: '03682dca-de31-5e25-7bcd-da13acc8d17d',
             text: '💻 Start develop To Do App',
             done: false
         },
         {
-            id: 4,
+            id: 'f5b99b4e-dba6-f800-f891-755a2285549a',
             text: '🤳 Take selfies with monuments',
             done: false
         }
@@ -41,7 +42,7 @@ export function todoChangeHandler(state = [], change) {
     switch(change.type) {
         case 'ADD_TODO':
             return [...state, {
-                id: state.length,
+                id: uuid(),
                 text: change.text,
                 done: false
             }];

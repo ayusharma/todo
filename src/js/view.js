@@ -33,7 +33,9 @@ const renderInputBox = () => {
     'class',
     '',
     'placeholder',
-    'Add a task'
+    'Add a task',
+    'autocomplete',
+    'off'
   ]);
   elementClose('input');
   elementOpen('button', null, [
