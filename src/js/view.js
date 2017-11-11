@@ -82,7 +82,7 @@ const renderTodoItems = todo => {
  */
 const NoAllTasks = () => text('💯 Let\'s make some plans');
 const NoOpenTasks = () => text('👏 Nothing Here');
-const NoCloseTasks = () => text('👨‍💻 Nothing Here');
+const NoCloseTasks = () => text('😊 Nothing Here');
 /**
  * Nothing Here Template 
  */

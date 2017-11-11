@@ -1,6 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import uuid from './lib/uuid';
 
+/**
+ * Hack to remove numeric ID
+ */
+if (!localStorage['active']) {
+    localStorage.removeItem('todo');
+    localStorage['active'] = 'true';
+    // localStorage['active'] = 'false';
+}
+
 const initialState = {
     todos: [
         {
@@ -21,11 +30,6 @@ const initialState = {
         {
             id: '03682dca-de31-5e25-7bcd-da13acc8d17d',
             text: '💻 Start develop To Do App',
-            done: false
-        },
-        {
-            id: 'f5b99b4e-dba6-f800-f891-755a2285549a',
-            text: '🤳 Take selfies with monuments',
             done: false
         }
     ],
@@ -96,6 +100,7 @@ const reducers = combineReducers({
     todos: todoChangeHandler,
     filter: filterChangeHandler
 });
+
 
 /**
  * Create Store
