@@ -2,7 +2,7 @@
 
 * * *
 
-![](static/screenshot.png)
+![](static/preview.png)
 A simple todo app made using 
 [Incremental DOM](http://google.github.io/incremental-dom/#about ) and 
 [Redux](redux.js.org).
@@ -133,6 +133,7 @@ Commits:
 - 39ee90b WEB-110, WEB-104: Improve visual appearance, Change filter position test
 - 82bbc63 Improvement:WEB-110: Improve visual appearance
 - ebe0342 UI improvement - card layout
+- a0300d7 No tasks handler and UI fixes
 
 #### WEB-302: Static feature compilation
 I developed a find and replace loader for this. It is in `loader` directory.
