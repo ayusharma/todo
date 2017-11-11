@@ -80,19 +80,16 @@ const renderTodoItems = todo => {
  * @param {array} state 
  */
 const renderTodoList = state => {
-  elementOpen('div')
   elementOpen('ul', null, ['class', 'todo']);
   state.forEach(element => {
     renderTodoItems(element);
   });
   elementClose('ul');
-  elementClose('div')
 };
 
 /**
  * Add status filtering bar
  * @param {string} filter OPEN/CLOSED/ALL
- * @returns {string} template to render according to filter
  */
 const renderFilterBar = filter => {
   console.log(filter);
@@ -124,9 +121,11 @@ const renderFilterBar = filter => {
  */
 function renderPart(data) {
   const {todoItems, filter} = data;
-  elementOpen('div', null, ['class', 'todo__text-center', 'id', 'app']);
+  elementOpen('div', null, ['id', 'app']);
   header();
+  elementOpen('div', null, ['class','card'])
   renderApp(data);
+  elementClose('div')
   elementClose('div');
 }
 
@@ -163,7 +162,8 @@ function filterTodoItem (filter, todos) {
 
 /**
  * Render app according to URL Parameters
- * @param {object} data 
+ * @param {object} data - state
+ * @returns {function} App
  */
 function renderApp(data) {
   const status = {
@@ -192,7 +192,7 @@ function renderApp(data) {
 
 /**
  * Render Todo at top. Default URL parameter.
- * @param {object} data 
+ * @param {object} data - store
  */
 function renderAddTodoAtTop(data) {
     renderInputBox();
@@ -201,7 +201,7 @@ function renderAddTodoAtTop(data) {
 
 /**
  * Render tood at bottom - #renderBottom
- * @param {object} data 
+ * @param {object} data - store
  */
 function renderAddTodoAtBottom(data) {
     renderTodoList(data.todoItems);
@@ -210,10 +210,7 @@ function renderAddTodoAtBottom(data) {
 
 /**
  * Render addToDo at bottom with filter - #filter#renderBottom
- * @param {string} input 
- * @param {string} todoList 
- * @param {string} filterBar 
- * @returns {string} App template
+ * @param {object} data - store
  */
 function renderAddTodoAtBottomWithFilter(data) {
     renderTodoList(data.todoItems);
@@ -223,10 +220,7 @@ function renderAddTodoAtBottomWithFilter(data) {
 
 /**
  * Render filter bar the bottom - #filter
- * @param {string} input 
- * @param {string} todoList 
- * @param {string} filterBar 
- * @returns {string} App template
+ * @param {object} data - store
  */
 function renderStatusFilterBar(data) {
     renderInputBox();
@@ -236,10 +230,7 @@ function renderStatusFilterBar(data) {
 
 /**
  * Render filter bar at the top - #filter#renderBottom#filterTop
- * @param {string} input 
- * @param {string} todoList 
- * @param {string} filterBar 
- * @returns {string} App template
+ * @param {object} data - store
  */
 function renderFilterTop(data) {
     renderFilterBar(data.filter);
