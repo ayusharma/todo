@@ -9,7 +9,10 @@ import {
 export function registerEventHandlers() {
     listen('click', '#addTodo', event => {
         const todoInput = document.getElementById('todoInput');
-        todos.dispatch(addTodo(todoInput.value));
+        if (todoInput.value){
+             todos.dispatch(addTodo(todoInput.value));
+             todoInput.value = '';
+        }
         document.getElementById('todoInput').focus();
         event.stopPropagation();
     });
