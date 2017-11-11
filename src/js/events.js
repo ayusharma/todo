@@ -3,7 +3,8 @@ import {listen} from './lib/events';
 import {
   addTodo,
   toggleTodoState,
-  setFilter
+  setFilter,
+  removeTodo
 } from './actions';
 
 export function registerEventHandlers() {
@@ -24,5 +25,10 @@ export function registerEventHandlers() {
 
     listen('change', '.js_toggle_filter', event => {
         todos.dispatch(setFilter(event.target.value));
+    });
+
+    listen('click', '.todo__remove', event => {
+      const id = Number.parseInt(event.target.getAttribute('data-id'), 10);
+      todos.dispatch(removeTodo(id));
     });
 }

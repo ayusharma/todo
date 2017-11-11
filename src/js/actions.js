@@ -25,3 +25,14 @@ export function setFilter(filter) {
       filter
     };
 }
+
+/**
+ * Remove Todo
+ * @param {number} id
+ */
+export function removeTodo(id){
+    return {
+        type: 'REMOVE_TODO',
+        id
+    }
+}

@@ -49,6 +49,11 @@ export function todoChangeHandler(state = [], change) {
                 return e;
             })
 
+        case 'REMOVE_TODO':
+            console.log(change);
+            return state.filter(e => {
+                return e.id !== change.id;
+            })
         default:
             return state;
     }
